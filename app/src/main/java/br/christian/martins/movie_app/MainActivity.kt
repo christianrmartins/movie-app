@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
         val client = HttpClient(CIO)
         val response: HttpResponse = client.get("https://ktor.io/")
         println(response.status)
-        client.close();
+        client.close()
     }
 }
 
