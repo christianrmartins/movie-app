@@ -58,16 +58,8 @@ class MainActivity : ComponentActivity() {
 
     private fun runAsync() {
         lifecycleScope.launch {
-            println(movieApi.testApi())
-//            ktorApiTest()
+            println(movieApi.getMoviesT())
         }
-    }
-
-    private suspend fun ktorApiTest() {
-        val client = HttpClient(CIO)
-        val response: HttpResponse = client.get("https://ktor.io/")
-        println(response.status)
-        client.close()
     }
 
     override fun onDestroy() {
