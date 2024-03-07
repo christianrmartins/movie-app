@@ -4,13 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import br.christian.martins.movie_app.data.Movie
 import br.christian.martins.movie_app.ui.theme.MovieappTheme
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,10 +31,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MovieList(
+                        movies = listOf(
+                            Movie(
+                                title = "The Lord of the Rings - 1",
+                            ),
+                            Movie(
+                                title = "The Lord of the Rings - 2",
+                            ),
+                            Movie(
+                                title = "The Lord of the Rings - 3",
+                            )
+                        ),
+                    )
                 }
             }
+            runAsync()
         }
+    }
+
+    private fun runAsync() {
+        lifecycleScope.launch {
+            ktorApiTest()
+        }
+    }
+
+    private suspend fun ktorApiTest() {
+        val client = HttpClient(CIO)
+        val response: HttpResponse = client.get("https://ktor.io/")
+        println(response.status)
+        client.close()
     }
 }
 
@@ -43,4 +78,26 @@ fun GreetingPreview() {
     MovieappTheme {
         Greeting("Android")
     }
+}
+
+@Composable
+fun MovieList(movies: List<Movie>) {
+    LazyColumn {
+        items(movies) { movie ->
+            MovieRow(movie)
+        }
+    }
+    //OR
+//    Column {
+//        movies.forEach { movie ->
+//            MovieRow(movie)
+//        }
+//    }
+}
+
+@Composable
+fun MovieRow(movie: Movie) {
+    Text(
+        text = "Movie ${movie.title}!"
+    )
 }
