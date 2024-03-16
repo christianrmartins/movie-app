@@ -2,6 +2,7 @@ package br.christian.martins.movie_app.data
 
 import br.christian.martins.movie_app.BuildConfig
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -17,13 +18,14 @@ class MovieAPI {
         }
     }
 
-    suspend fun getMovies(page: Int = 1) = get("3/movie/now_playing?language=en-US&page=$page")
+//    suspend fun getMovies(page: Int = 1) = get("3/movie/now_playing?language=en-US&page=$page")
 
-//    suspend fun getMovies(page: Int = 1): List<Movie> {
-//        val response = get("3/movie/now_playing?language=en-US&page=$page")
-//        println(response.status)
-//        return listOf()
-//    }
+    suspend fun getMovies(page: Int = 1): List<Movie> {
+        val response = get("3/movie/now_playing?language=en-US&page=$page")
+        val result = response.body<MovieResult>()
+        println(response.status)
+        return result.results
+    }
 
     private suspend fun get(path: String) = httpClient.get(url + path)
 
