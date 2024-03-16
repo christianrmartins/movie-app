@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import br.christian.martins.movie_app.data.Movie
+import br.christian.martins.movie_app.data.MovieAPI
 import br.christian.martins.movie_app.ui.theme.MovieappTheme
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -22,6 +23,11 @@ import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    private val movieApi by lazy {
+        MovieAPI()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -52,15 +58,13 @@ class MainActivity : ComponentActivity() {
 
     private fun runAsync() {
         lifecycleScope.launch {
-            ktorApiTest()
+            println(movieApi.getMoviesT())
         }
     }
 
-    private suspend fun ktorApiTest() {
-        val client = HttpClient(CIO)
-        val response: HttpResponse = client.get("https://ktor.io/")
-        println(response.status)
-        client.close()
+    override fun onDestroy() {
+        movieApi.dispose()
+        super.onDestroy()
     }
 }
 

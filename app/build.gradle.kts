@@ -1,7 +1,11 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+val ktorVersion: String by project
 
 android {
     namespace = "br.christian.martins.movie_app"
@@ -18,7 +22,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val tmdbAccessToken =
+            gradleLocalProperties(rootProject.rootDir).getProperty("tmdbAccessToken", "EMPTY!")
+        buildConfigField("String", "TMDB_ACCESS_TOKEN", tmdbAccessToken)
     }
+
 
     buildTypes {
         release {
@@ -49,8 +58,6 @@ android {
     }
 }
 
-val ktor_version: String by project
-
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -60,8 +67,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
