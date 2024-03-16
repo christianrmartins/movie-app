@@ -16,10 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import br.christian.martins.movie_app.data.Movie
 import br.christian.martins.movie_app.data.MovieAPI
 import br.christian.martins.movie_app.ui.theme.MovieappTheme
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.request.get
-import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -52,13 +48,13 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-            runAsync()
+            getMovieAsync()
         }
     }
 
-    private fun runAsync() {
+    private fun getMovieAsync() {
         lifecycleScope.launch {
-            println(movieApi.getMoviesT())
+            println(movieApi.getMovies())
         }
     }
 
